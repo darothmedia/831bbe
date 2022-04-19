@@ -22,7 +22,7 @@ const Messages = (props) => {
             otherUser={otherUser}
           />
         );
-        }
+        } return null
       })}
     </Box>
   );
