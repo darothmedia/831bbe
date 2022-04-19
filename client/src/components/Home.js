@@ -52,29 +52,27 @@ const Home = ({ user, logout }) => {
 
   const saveMessage = async (body) => {
     const { data } = await axios.post('/api/messages', body);
+    setMessageCount(messageCount + 1)
     return data;
   };
 
-  const sendMessage = (data, body) => {
-    socket.emit('new-message', {
-      message: data.message,
-      recipientId: body.recipientId,
-      sender: data.sender,
-    });
+  const sendMessage = (body) => {
+    const data = saveMessage(body)
+      socket.emit('new-message', {
+        message: data.message,
+        recipientId: data.recipientId,
+        sender: data.sender,
+      });
   };
 
   const postMessage = (body) => {
     try {
-      const data = saveMessage(body);
-      
       if (!body.conversationId) {
-        addNewConvo(body.recipientId, data);
+        addNewConvo(body.recipientId, body);
       } else {
         addMessageToConversation(body);
       }
-
-      sendMessage(data, body);
-      setMessageCount(messageCount + 1)
+      sendMessage(body);
     } catch (error) {
       console.error(error);
     }
@@ -188,7 +186,6 @@ const Home = ({ user, logout }) => {
     const fetchConversations = async () => {
       try {
         const { data } = await axios.get('/api/conversations');
-        // console.log(data)
         setConversations(data);
       } catch (error) {
         console.error(error);

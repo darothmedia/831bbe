@@ -11,6 +11,7 @@ const Messages = (props) => {
       {messages.map((message) => {
         const time = moment(message.createdAt).format('h:mm');
 
+        if (message.senderId) {
         return message.senderId === userId ? (
           <SenderBubble key={message.id} text={message.text} time={time} />
         ) : (
@@ -21,6 +22,7 @@ const Messages = (props) => {
             otherUser={otherUser}
           />
         );
+        }
       })}
     </Box>
   );
