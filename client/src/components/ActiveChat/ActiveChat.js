@@ -41,7 +41,6 @@ const ActiveChat = ({
     <Box className={classes.root}>
       {isConversation(conversation) && conversation.otherUser && (
         <>
-        {console.log(conversation)}
           <Header
             username={conversation.otherUser.username}
             online={conversation.otherUser.online || false}

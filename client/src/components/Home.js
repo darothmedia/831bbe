@@ -21,6 +21,7 @@ const Home = ({ user, logout }) => {
 
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
+  const [messageCount, setMessageCount] = useState(0)
 
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -65,14 +66,15 @@ const Home = ({ user, logout }) => {
   const postMessage = (body) => {
     try {
       const data = saveMessage(body);
-
+      
       if (!body.conversationId) {
-        addNewConvo(body.recipientId, data.message);
+        addNewConvo(body.recipientId, data);
       } else {
-        addMessageToConversation(data);
+        addMessageToConversation(body);
       }
 
       sendMessage(data, body);
+      setMessageCount(messageCount + 1)
     } catch (error) {
       console.error(error);
     }
@@ -107,9 +109,12 @@ const Home = ({ user, logout }) => {
       }
 
       conversations.forEach((convo) => {
-        if (convo.id === message.conversationId) {
-          convo.messages.push(message);
-          convo.latestMessageText = message.text;
+        // console.log(message)
+        if (message){
+          if (convo.id === message.conversationId) {
+            convo.messages.push(message);
+            convo.latestMessageText = message.text;
+          }
         }
       });
       setConversations(conversations);
@@ -183,6 +188,7 @@ const Home = ({ user, logout }) => {
     const fetchConversations = async () => {
       try {
         const { data } = await axios.get('/api/conversations');
+        // console.log(data)
         setConversations(data);
       } catch (error) {
         console.error(error);
@@ -191,7 +197,7 @@ const Home = ({ user, logout }) => {
     if (!user.isFetching) {
       fetchConversations();
     }
-  }, [user]);
+  }, [user, messageCount]);
 
   const handleLogout = async () => {
     if (user && user.id) {

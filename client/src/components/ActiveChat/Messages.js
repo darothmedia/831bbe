@@ -5,12 +5,11 @@ import moment from 'moment';
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  const msgOrder = messages.reverse()
 
   return (
     <Box>
-      {msgOrder.map((message) => {
-        const time = moment(message.createdAt).format('h:mm:ss:SSS');
+      {messages.map((message) => {
+        const time = moment(message.createdAt).format('h:mm');
 
         return message.senderId === userId ? (
           <SenderBubble key={message.id} text={message.text} time={time} />
