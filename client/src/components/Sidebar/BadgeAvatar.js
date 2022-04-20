@@ -21,13 +21,22 @@ const useStyles = makeStyles(() => ({
   sidebar: {
     marginLeft: 17,
   },
+  chatPic: {
+    height: 20,
+    width: 20,
+  },
+  chat: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: 10
+  }
 }));
 
 const UserAvatar = ({ sidebar, username, photoUrl, online }) => {
   const classes = useStyles();
 
   return (
-    <Box className={sidebar ? classes.sidebar : ""}>
+    <Box className={sidebar ? classes.sidebar : ''}>
       <Badge
         classes={{ badge: `${classes.badge} ${online && classes.online}` }}
         variant="dot"
@@ -39,5 +48,25 @@ const UserAvatar = ({ sidebar, username, photoUrl, online }) => {
     </Box>
   );
 };
+
+export const ReadAvatar = ({ sidebar, username, photoUrl }) => {
+  const classes = useStyles();
+
+  return (
+    <Box className={sidebar ? classes.sidebar : classes.chat}>
+      <Badge
+        classes={{ badge: `${classes.chat}` }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        overlap="circular"
+      >
+        <Avatar 
+          alt={username} 
+          src={photoUrl} 
+          className={classes.chatPic} />
+      </Badge>
+    </Box>
+  );
+};
+
 
 export default UserAvatar;

@@ -53,7 +53,6 @@ const Home = ({ user, logout }) => {
   const saveMessage = async (body) => {
     const { data } = await axios.post('/api/messages', body);
     setInteractions(interactions + 1)
-    console.log(data)
     return data;
   };
 
@@ -122,7 +121,6 @@ const Home = ({ user, logout }) => {
       }
 
       conversations.forEach((convo) => {
-        // console.log(message)
         if (message){
           if (convo.id === message.conversationId) {
             convo.messages.push(message);
@@ -202,7 +200,6 @@ const Home = ({ user, logout }) => {
       try {
         const { data } = await axios.get('/api/conversations');
         setConversations(data);
-        console.log(data)
       } catch (error) {
         console.error(error);
       }
