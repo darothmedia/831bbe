@@ -17,7 +17,7 @@ const Messages = (props) => {
       {messages.map((message) => {
         const time = moment(message.createdAt).format('h:mm');
         if (message.senderId){
-          if (lastRead.id === message.id) {
+          if (lastRead && lastRead.id === message.id) {
             return (
               <div key={message.id}>
                 <SenderBubble
