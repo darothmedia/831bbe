@@ -21,7 +21,7 @@ const Home = ({ user, logout }) => {
 
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
-  const [messageCount, setMessageCount] = useState(0)
+  const [interactions, setInteractions] = useState(0)
 
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,7 +52,8 @@ const Home = ({ user, logout }) => {
 
   const saveMessage = async (body) => {
     const { data } = await axios.post('/api/messages', body);
-    setMessageCount(messageCount + 1)
+    setInteractions(interactions + 1)
+    console.log(data)
     return data;
   };
 
@@ -61,9 +62,15 @@ const Home = ({ user, logout }) => {
       socket.emit('new-message', {
         message: data.message,
         recipientId: data.recipientId,
-        sender: data.sender,
+        sender: data.sender
       });
   };
+
+  const patchMessage = async (body) => {
+    const { data } = await axios.patch('/api/messages/read', body);
+    setInteractions(interactions + 1)
+    return data 
+  }
 
   const postMessage = (body) => {
     try {
@@ -77,6 +84,14 @@ const Home = ({ user, logout }) => {
       console.error(error);
     }
   };
+
+  const readMessage = body => {
+    try {
+      patchMessage(body)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const addNewConvo = useCallback(
     (recipientId, message) => {
@@ -187,6 +202,7 @@ const Home = ({ user, logout }) => {
       try {
         const { data } = await axios.get('/api/conversations');
         setConversations(data);
+        console.log(data)
       } catch (error) {
         console.error(error);
       }
@@ -194,7 +210,7 @@ const Home = ({ user, logout }) => {
     if (!user.isFetching) {
       fetchConversations();
     }
-  }, [user, messageCount]);
+  }, [user, interactions]);
 
   const handleLogout = async () => {
     if (user && user.id) {
@@ -213,6 +229,7 @@ const Home = ({ user, logout }) => {
           clearSearchedUsers={clearSearchedUsers}
           addSearchedUsers={addSearchedUsers}
           setActiveChat={setActiveChat}
+          readMessage={readMessage}
         />
         <ActiveChat
           activeConversation={activeConversation}
