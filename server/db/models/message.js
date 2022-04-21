@@ -9,7 +9,7 @@ const Message = db.define("message", {
   senderId: {
     type: Sequelize.INTEGER,
     allowNull: false,
-  },
+  }
 });
 
 module.exports = Message;
