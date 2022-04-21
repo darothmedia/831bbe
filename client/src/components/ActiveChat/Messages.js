@@ -6,7 +6,7 @@ import moment from 'moment';
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  var lastRead;
+  let lastRead;
 
   for (let message of messages){
     if (message.read && message.senderId !== otherUser.id) lastRead = message;
