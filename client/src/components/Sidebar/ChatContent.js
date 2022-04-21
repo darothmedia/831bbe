@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     marginLeft: 20,
-    flexGrow: 1,
+    flex: 0.9,
   },
   username: {
     fontWeight: "bold",
@@ -17,11 +17,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     color: "#9CADC8",
     letterSpacing: -0.17,
+    maxWidth: 200,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
   boldText: {
     fontSize: 12,
     letterSpacing: -0.17,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    maxWidth: 200,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   }
 }));
 
