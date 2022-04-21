@@ -21,7 +21,6 @@ const Home = ({ user, logout }) => {
 
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
-  const [messageCount, setMessageCount] = useState(0)
 
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,28 +50,27 @@ const Home = ({ user, logout }) => {
   };
 
   const saveMessage = async (body) => {
-    const { data } = await axios.post('/api/messages', body);
-    setMessageCount(messageCount + 1)
-    return data;
+    const {data} = await axios.post('/api/messages', body)
+    return data
   };
 
-  const sendMessage = (body) => {
-    const data = saveMessage(body)
+  const sendMessage = (data, body) => {
       socket.emit('new-message', {
         message: data.message,
-        recipientId: data.recipientId,
+        recipientId: body.recipientId,
         sender: data.sender,
       });
   };
 
-  const postMessage = (body) => {
+  const postMessage = async (body) => {
     try {
+      const data = await saveMessage(body)
       if (!body.conversationId) {
-        addNewConvo(body.recipientId, body);
+        addNewConvo(body.recipientId, data.message);
       } else {
-        addMessageToConversation(body);
+        addMessageToConversation(data);
       }
-      sendMessage(body);
+      sendMessage(data, body);
     } catch (error) {
       console.error(error);
     }
@@ -80,44 +78,33 @@ const Home = ({ user, logout }) => {
 
   const addNewConvo = useCallback(
     (recipientId, message) => {
-      conversations.forEach((convo) => {
+      setConversations(prev => prev.map((convo) => {
         if (convo.otherUser.id === recipientId) {
           convo.messages.push(message);
           convo.latestMessageText = message.text;
           convo.id = message.conversationId;
         }
-      });
-      setConversations(conversations);
+        return convo
+      }));
     },
-    [setConversations, conversations]
+    [setConversations]
   );
 
   const addMessageToConversation = useCallback(
     (data) => {
-      // if sender isn't null, that means the message needs to be put in a brand new convo
-      const { message, sender = null } = data;
-      if (sender !== null) {
-        const newConvo = {
-          id: message.conversationId,
-          otherUser: sender,
-          messages: [message],
-        };
-        newConvo.latestMessageText = message.text;
-        setConversations((prev) => [newConvo, ...prev]);
-      }
+      const { message } = data;
 
-      conversations.forEach((convo) => {
-        // console.log(message)
-        if (message){
+      setConversations(prev => prev.map((convo) => {
+        if (message) {
           if (convo.id === message.conversationId) {
             convo.messages.push(message);
             convo.latestMessageText = message.text;
           }
         }
-      });
-      setConversations(conversations);
+        return convo
+      }));
     },
-    [setConversations, conversations]
+    [setConversations]
   );
 
   const setActiveChat = (username) => {
@@ -194,7 +181,7 @@ const Home = ({ user, logout }) => {
     if (!user.isFetching) {
       fetchConversations();
     }
-  }, [user, messageCount]);
+  }, [user]);
 
   const handleLogout = async () => {
     if (user && user.id) {
