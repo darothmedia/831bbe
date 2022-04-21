@@ -81,11 +81,11 @@ const Home = ({ user, logout }) => {
     }
   };
 
-  const readMessage = body => {
+  const readMessage = (body) => {
     try {
       patchMessage(body)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

@@ -45,9 +45,10 @@ router.post("/", async (req, res, next) => {
 
 router.patch('/read', async (req, res, next) => {
   try {
-    if (!req.user) {
+    if (!req.user || req.body.sender) {
       return res.sendStatus(401);
-    }
+    };
+
     const { id } = req.body;
   
     const message = await Message.update({read: true}, {
