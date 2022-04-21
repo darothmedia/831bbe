@@ -91,18 +91,28 @@ const Home = ({ user, logout }) => {
   );
 
   const addMessageToConversation = useCallback(
-    (data) => {
-      const { message } = data;
-
-      setConversations(prev => prev.map((convo) => {
-        if (message) {
-          if (convo.id === message.conversationId) {
-            convo.messages.push(message);
-            convo.latestMessageText = message.text;
+    async (data) => {
+      // if sender isn't null, that means the message needs to be put in a brand new convo
+      const { message, sender = null } = data;
+      if (sender !== null) {
+        const newConvo = {
+          id: message.conversationId,
+          otherUser: sender,
+          messages: [message],
+        };
+        newConvo.latestMessageText = message.text;
+        setConversations((prev) => [newConvo, ...prev]);
+      } else {
+        setConversations(prev => prev.map((convo) => {
+          if (message) {
+            if (convo.id === message.conversationId) {
+              convo.messages.push(message);
+              convo.latestMessageText = message.text;
+            }
           }
-        }
-        return convo
-      }));
+          return convo
+        }));
+      }
     },
     [setConversations]
   );
