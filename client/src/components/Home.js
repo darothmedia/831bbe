@@ -155,7 +155,7 @@ const Home = ({ user, logout }) => {
                 convoCopy.unreads++
               }
               if (convoCopy.otherUser.id === activeConversation){ 
-                readMessages(convoCopy)
+                readMessages(convoCopy);
               }
               return convoCopy
             } else {
