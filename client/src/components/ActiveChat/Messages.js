@@ -16,7 +16,7 @@ const Messages = (props) => {
     <Box>
       {messages.map((message) => {
         const time = moment(message.createdAt).format('h:mm');
-        if (message.senderId){
+
           if (lastRead && lastRead.id === message.id) {
             return (
               <div key={message.id}>
@@ -46,8 +46,6 @@ const Messages = (props) => {
               otherUser={otherUser}
             />
           );
-        }
-        return null;
       })}
     </Box>
   );
