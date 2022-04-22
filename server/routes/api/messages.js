@@ -49,11 +49,13 @@ router.patch('/read', async (req, res, next) => {
       return res.sendStatus(401);
     };
 
-    const { id } = req.body;
+    const {id, otherUser} = req.body
   
     const message = await Message.update({read: true}, {
       where: {
-        id: id
+        read: false,
+        senderId: otherUser.id,
+        conversationId: id
       }
     });
 

@@ -81,7 +81,7 @@ const Home = ({ user, logout }) => {
     }
   };
 
-  const readMessage = (body) => {
+  const readMessages = (body) => {
     try {
       patchMessage(body)
     } catch (error) {
@@ -230,7 +230,7 @@ const Home = ({ user, logout }) => {
           clearSearchedUsers={clearSearchedUsers}
           addSearchedUsers={addSearchedUsers}
           setActiveChat={setActiveChat}
-          readMessage={readMessage}
+          readMessages={readMessages}
         />
         <ActiveChat
           activeConversation={activeConversation}

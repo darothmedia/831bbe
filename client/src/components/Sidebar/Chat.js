@@ -17,21 +17,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Chat = ({ conversation, setActiveChat, readMessage }) => {
+const Chat = ({ conversation, setActiveChat, readMessages }) => {
   const classes = useStyles();
   const { otherUser } = conversation;
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
-    unreads.forEach(message => {
-      readMessage(message)
-    })
+    await readMessages(conversation)
   };
 
-  const unreads = conversation.messages.filter(message =>
-    !message.read && message.senderId === conversation.otherUser.id)
-  
-  const newMessages = unreads.length > 0
+  const { unreads } = conversation
+  const newMessages = unreads > 0
 
   return (
     <Box onClick={() => handleClick(conversation)} className={classes.root}>
@@ -42,7 +38,7 @@ const Chat = ({ conversation, setActiveChat, readMessage }) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} newMessages={newMessages} />
-      <Badge badgeContent={unreads.length} color='primary'></Badge>
+      <Badge badgeContent={unreads} color='primary'></Badge>
     </Box>
   );
 };
