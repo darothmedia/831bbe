@@ -45,7 +45,7 @@ router.post("/", async (req, res, next) => {
 
 router.patch('/read', async (req, res, next) => {
   try {
-    if (!req.user || req.body.sender) {
+    if (!req.user) {
       return res.sendStatus(401);
     };
 
