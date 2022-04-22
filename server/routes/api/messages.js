@@ -49,9 +49,17 @@ router.patch('/read', async (req, res, next) => {
       return res.sendStatus(401);
     };
 
-    const {id, otherUser} = req.body
+    const {id, otherUser, unreads} = req.body
+
+    // const messages = await Message.findAll({
+    //   where: {
+    //     read: false,
+    //     senderId: otherUser.id,
+    //     conversationId: id
+    //   }
+    // })
   
-    const message = await Message.update({read: true}, {
+    const messages = await Message.update({read: true}, {
       where: {
         read: false,
         senderId: otherUser.id,
@@ -59,7 +67,7 @@ router.patch('/read', async (req, res, next) => {
       }
     });
 
-    res.json({ message });
+    res.json({id, otherUser, unreads});
   } catch (error) {
     next(error);
   }
