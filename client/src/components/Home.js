@@ -112,8 +112,28 @@ const Home = ({ user, logout }) => {
     [setConversations]
   );
 
+  const readConvoMessages = useCallback(
+    async (readConvo) => {
+      setConversations((prev) =>
+        prev.map((convo) => {
+          if (convo.id === readConvo.id) {
+            const convoCopy = { ...convo };
+            if (convo.otherUser.id === readConvo.otherUser.id) {
+              convoCopy.unreads = 0;
+              return convoCopy;
+            } else if (readConvo.unreads > 0) {
+              const messages = convoCopy.messages
+              convoCopy.lastRead = messages[messages.length - 1].id
+              return convoCopy;
+            } else return convo
+          } else return convo;
+        })
+      )
+    }, [])
+
   const addMessageToConversation = useCallback(
     async (data) => {
+      console.log(data)
       // if sender isn't null, that means the message needs to be put in a brand new convo
       const { message, sender = null } = data;
       if (sender !== null) {
@@ -134,6 +154,9 @@ const Home = ({ user, logout }) => {
               if (message.senderId !== user.id){
                 convoCopy.unreads++
               }
+              if (convoCopy.otherUser.id === activeConversation){ 
+                readMessages(convoCopy)
+              }
               return convoCopy
             } else {
               return convo;
@@ -143,31 +166,15 @@ const Home = ({ user, logout }) => {
         }));
       };
     },
-    [setConversations, user]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setConversations, user, activeConversation]
   );
 
   const setActiveChat = (username) => {
     setActiveConversation(username);
   };
 
-  const readConvoMessages = useCallback( 
-    async (readConvo) => {
-    setConversations((prev) => 
-      prev.map((convo) => {
-        if (convo.id === readConvo.id){ 
-          const convoCopy = { ...convo };
-          if (convo.otherUser.id === readConvo.otherUser.id){
-            convoCopy.unreads = 0;
-            return convoCopy;
-          } else if (readConvo.unreads > 0) {
-            const messages = convoCopy.messages
-            convoCopy.lastRead = messages[messages.length - 1].id
-            return convoCopy;
-          } else return convo
-        } else return convo;
-      })
-    )
-  }, [])
+  
 
   const addOnlineUser = useCallback((id) => {
     setConversations((prev) =>
@@ -267,6 +274,7 @@ const Home = ({ user, logout }) => {
           conversations={conversations}
           user={user}
           postMessage={postMessage}
+          readMessages={readMessages}
         />
       </Grid>
     </>

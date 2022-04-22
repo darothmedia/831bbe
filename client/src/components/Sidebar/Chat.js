@@ -22,7 +22,7 @@ const Chat = ({ conversation, setActiveChat, readMessages }) => {
   const { otherUser } = conversation;
 
   const handleClick = async (conversation) => {
-    await setActiveChat(conversation.otherUser.username);
+    await setActiveChat(conversation.otherUser.id);
     await readMessages(conversation)
   };
 
