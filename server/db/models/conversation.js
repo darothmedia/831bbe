@@ -1,7 +1,5 @@
 const { Op } = require("sequelize");
 const db = require("../db");
-const Message = require("./message");
-const Participant = require("./participant");
 const User = require("./user");
 
 const Conversation = db.define("conversation", {
@@ -26,7 +24,7 @@ Conversation.findConversation = async function (userIds) {
     conversation.users.length === userIds.length)
   
   // return conversation or null if it doesn't exist
-  return filtered.length ? filtered : null;
+  filtered.length ? res.json({filtered}) : null;
 };
 
 module.exports = Conversation;
