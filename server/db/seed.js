@@ -2,7 +2,6 @@ const db = require("./db");
 const { User } = require("./models");
 const Conversation = require("./models/conversation");
 const Message = require("./models/message");
-const Participant = require("./models/participant");
 
 async function seed() {
   await db.sync({ force: true });
@@ -27,9 +26,6 @@ async function seed() {
   const santaigoConvo = await Conversation.create({});
   await santaigoConvo.addUser(santiago);
   await santaigoConvo.addUser(thomas);
-
-  // await santiago.addConversation(santaigoConvo)
-  // await thomas.addConversation(santaigoConvo)
 
   await Message.create({
     conversationId: santaigoConvo.id,
@@ -58,9 +54,6 @@ async function seed() {
   await chiumboConvo.addUser(chiumbo);
   await chiumboConvo.addUser(thomas);
 
-  // await thomas.addConversation(chiumboConvo)
-  // await chiumbo.addConversation(chiumboConvo)
-
   await Message.create({
     conversationId: chiumboConvo.id,
     senderId: chiumbo.id,
@@ -78,9 +71,6 @@ async function seed() {
   const hualingConvo = await Conversation.create({});
   await hualingConvo.addUser(thomas)
   await hualingConvo.addUser(hualing)
-
-  // await thomas.addConversation(hualingConvo)
-  // await hualing.addConversation(hualingConvo)
 
   for (let i = 0; i < 11; i++) {
     await Message.create({
