@@ -46,7 +46,7 @@ router.get("/", async (req, res, next) => {
           ],
         })
 
-      if (users.length) {
+      if (users) {
         users.map(user => user.toJSON())
         convoJSON.otherUser = users[0];
         convoJSON.fullUserList = users;
