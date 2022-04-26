@@ -11,9 +11,10 @@ const Conversation = db.define("conversation", {
 
 Conversation.findConversation = async function (userIds) {
   const conversations = await Conversation.findAll({
+    attributes: ["id"],
     where: {
       '$users.id$': {
-        [Op.or]: userIds
+        [Op.in]: userIds
       }
     },
     include: [
@@ -21,12 +22,11 @@ Conversation.findConversation = async function (userIds) {
     ]
   });
 
-  // const filtered = conversations.filter(conversation => {
-  //   conversation.users.length === userIds.length
-  // })
-
+  const filtered = conversations.filter(conversation => 
+    conversation.users.length === userIds.length)
+  
   // return conversation or null if it doesn't exist
-  return conversations;
+  return filtered.length ? filtered : null;
 };
 
 module.exports = Conversation;

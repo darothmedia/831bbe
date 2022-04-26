@@ -7,7 +7,6 @@ const Participant = require("./participant")
 
 User.belongsToMany(Conversation, { through: Participant });
 Conversation.belongsToMany(User, { through: Participant });
-// Conversation.belongsTo(User, { as: "user2" });
 Message.belongsTo(Conversation);
 Conversation.hasMany(Message);
 
