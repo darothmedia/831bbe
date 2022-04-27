@@ -62,6 +62,11 @@ const Home = ({ user, logout }) => {
       });
   };
 
+  const patchMessage = async (body) => {
+    const { data } = await axios.patch('/api/messages/read', body);
+    return data
+  }
+
   const postMessage = async (body) => {
     try {
       const data = await saveMessage(body)
@@ -75,6 +80,20 @@ const Home = ({ user, logout }) => {
       console.error(error);
     }
   };
+
+  const sendReadStatus = (body) => {
+    socket.emit('read-messages', body)
+  }
+
+  const readMessages = async (body) => {
+    try {
+      const data = await patchMessage(body)
+      sendReadStatus(data)
+      readConvoMessages(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const addNewConvo = useCallback(
     (recipientId, message) => {
@@ -92,6 +111,25 @@ const Home = ({ user, logout }) => {
     },
     [setConversations]
   );
+
+  const readConvoMessages = useCallback(
+    async (readConvo) => {
+      setConversations((prev) =>
+        prev.map((convo) => {
+          if (convo.id === readConvo.id) {
+            const convoCopy = { ...convo };
+            if (convo.otherUser.id === readConvo.otherUser.id) {
+              convoCopy.unreads = 0;
+              return convoCopy;
+            } else if (readConvo.unreads > 0) {
+              const messages = convoCopy.messages
+              convoCopy.lastRead = messages[messages.length - 1].id
+              return convoCopy;
+          }}
+          return convo;
+        })
+      )
+    }, [])
 
   const addMessageToConversation = useCallback(
     async (data) => {
@@ -112,6 +150,12 @@ const Home = ({ user, logout }) => {
               const convoCopy = {...convo}
               convoCopy.messages.push(message);
               convoCopy.latestMessageText = message.text;
+              if (message.senderId !== user.id){
+                convoCopy.unreads++
+              }
+              if (convoCopy.otherUser.id === activeConversation){ 
+                readMessages(convoCopy);
+              }
               return convoCopy
             } else {
               return convo;
@@ -121,12 +165,15 @@ const Home = ({ user, logout }) => {
         }));
       };
     },
-    [setConversations]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setConversations, user, activeConversation]
   );
 
   const setActiveChat = (username) => {
     setActiveConversation(username);
   };
+
+  
 
   const addOnlineUser = useCallback((id) => {
     setConversations((prev) =>
@@ -163,6 +210,7 @@ const Home = ({ user, logout }) => {
     socket.on('add-online-user', addOnlineUser);
     socket.on('remove-offline-user', removeOfflineUser);
     socket.on('new-message', addMessageToConversation);
+    socket.on('read-messages', readConvoMessages);
 
     return () => {
       // before the component is destroyed
@@ -170,8 +218,9 @@ const Home = ({ user, logout }) => {
       socket.off('add-online-user', addOnlineUser);
       socket.off('remove-offline-user', removeOfflineUser);
       socket.off('new-message', addMessageToConversation);
+      socket.off('read-messages', readConvoMessages);
     };
-  }, [addMessageToConversation, addOnlineUser, removeOfflineUser, socket]);
+  }, [addMessageToConversation, readConvoMessages, addOnlineUser, removeOfflineUser, socket]);
 
   useEffect(() => {
     // when fetching, prevent redirect
@@ -217,12 +266,14 @@ const Home = ({ user, logout }) => {
           clearSearchedUsers={clearSearchedUsers}
           addSearchedUsers={addSearchedUsers}
           setActiveChat={setActiveChat}
+          readMessages={readMessages}
         />
         <ActiveChat
           activeConversation={activeConversation}
           conversations={conversations}
           user={user}
           postMessage={postMessage}
+          readMessages={readMessages}
         />
       </Grid>
     </>

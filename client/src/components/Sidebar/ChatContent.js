@@ -7,20 +7,34 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     marginLeft: 20,
-    flexGrow: 1,
+    flex: 0.9,
   },
   username: {
     fontWeight: "bold",
     letterSpacing: -0.2,
   },
   previewText: {
+    flex: 1,
     fontSize: 12,
     color: "#9CADC8",
     letterSpacing: -0.17,
+    width: 180,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
+  boldText: {
+    fontSize: 12,
+    letterSpacing: -0.17,
+    fontWeight: 'bold',
+    maxWidth: 180,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  }
 }));
 
-const ChatContent = ({ conversation }) => {
+const ChatContent = ({ conversation, newMessages }) => {
   const classes = useStyles();
 
   const { otherUser } = conversation;
@@ -32,7 +46,7 @@ const ChatContent = ({ conversation }) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography className={newMessages ? classes.boldText : classes.previewText}>
           {latestMessageText}
         </Typography>
       </Box>
