@@ -1,53 +1,41 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { ReadAvatar } from '../Sidebar/BadgeAvatar';
+import ReadAvatar from '../Sidebar/ReadAvatar';
 import { SenderBubble, OtherUserBubble } from '.';
 import moment from 'moment';
 
 const Messages = (props) => {
-  const { messages, otherUser, userId } = props;
-  var lastRead;
-
-  for (let message of messages){
-    if (message.read && message.senderId !== otherUser.id) lastRead = message;
-  }
+  const { messages, otherUser, userId, lastRead } = props;
 
   return (
     <Box>
       {messages.map((message) => {
         const time = moment(message.createdAt).format('h:mm');
-        if (message.senderId){
-          if (lastRead && lastRead.id === message.id) {
+
+          if (message.senderId === userId) {
             return (
-              <div key={message.id}>
+              <Box key={message.id}>
                 <SenderBubble
                   key={message.id}
                   text={message.text}
                   time={time} />
-                <ReadAvatar
-                  sidebar={false}
-                  username={otherUser.username}
-                  photoUrl={otherUser.photoUrl}>
-                </ReadAvatar> 
-              </div>
-            )
-          } else if (message.senderId === userId)  {
+                {lastRead === message.id && 
+                  <ReadAvatar
+                    sidebar={false}
+                    username={otherUser.username}
+                    photoUrl={otherUser.photoUrl} /> 
+                }
+              </Box>
+            );
+          } else {
             return (
-            <SenderBubble
-              key={message.id}
-              text={message.text}
-              time={time} />
-          )
-          } else return (
-            <OtherUserBubble
-              key={message.id}
-              text={message.text}
-              time={time}
-              otherUser={otherUser}
-            />
-          );
-        }
-        return null;
+              <OtherUserBubble
+                key={message.id}
+                text={message.text}
+                time={time}
+                otherUser={otherUser} />
+            );
+          };
       })}
     </Box>
   );

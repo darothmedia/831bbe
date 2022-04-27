@@ -14,10 +14,11 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: -0.2,
   },
   previewText: {
+    flex: 1,
     fontSize: 12,
     color: "#9CADC8",
     letterSpacing: -0.17,
-    maxWidth: 200,
+    width: 180,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     letterSpacing: -0.17,
     fontWeight: 'bold',
-    maxWidth: 200,
+    maxWidth: 180,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'

@@ -49,24 +49,5 @@ const UserAvatar = ({ sidebar, username, photoUrl, online }) => {
   );
 };
 
-export const ReadAvatar = ({ sidebar, username, photoUrl }) => {
-  const classes = useStyles();
-
-  return (
-    <Box className={sidebar ? classes.sidebar : classes.chat}>
-      <Badge
-        classes={{ badge: `${classes.chat}` }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        overlap="circular"
-      >
-        <Avatar 
-          alt={username} 
-          src={photoUrl} 
-          className={classes.chatPic} />
-      </Badge>
-    </Box>
-  );
-};
-
 
 export default UserAvatar;

@@ -59,16 +59,19 @@ router.patch('/read', async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
-    }
-    const { id } = req.body;
+    };
+
+    const {id, otherUser, unreads} = req.body
   
-    const message = await Message.update({read: true}, {
+    const messages = await Message.update({read: true}, {
       where: {
-        id: id
+        read: false,
+        senderId: otherUser.id,
+        conversationId: id
       }
     });
 
-    res.json({ message });
+    res.json({id, otherUser, unreads});
   } catch (error) {
     next(error);
   }
