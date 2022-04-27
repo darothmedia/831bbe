@@ -38,7 +38,7 @@ const Chat = ({ conversation, setActiveChat, readMessages }) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} newMessages={newMessages} />
-      <Badge badgeContent={unreads} color='primary'></Badge>
+      <Badge badgeContent={unreads} color='primary' />
     </Box>
   );
 };

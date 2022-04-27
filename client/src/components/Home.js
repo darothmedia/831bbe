@@ -125,8 +125,8 @@ const Home = ({ user, logout }) => {
               const messages = convoCopy.messages
               convoCopy.lastRead = messages[messages.length - 1].id
               return convoCopy;
-            } else return convo
-          } else return convo;
+          }}
+          return convo;
         })
       )
     }, [])

@@ -50,14 +50,6 @@ router.patch('/read', async (req, res, next) => {
     };
 
     const {id, otherUser, unreads} = req.body
-
-    // const messages = await Message.findAll({
-    //   where: {
-    //     read: false,
-    //     senderId: otherUser.id,
-    //     conversationId: id
-    //   }
-    // })
   
     const messages = await Message.update({read: true}, {
       where: {

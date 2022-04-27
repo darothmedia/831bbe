@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { ReadAvatar } from '../Sidebar/BadgeAvatar';
+import ReadAvatar from '../Sidebar/ReadAvatar';
 import { SenderBubble, OtherUserBubble } from '.';
 import moment from 'moment';
 
@@ -19,12 +19,12 @@ const Messages = (props) => {
                   key={message.id}
                   text={message.text}
                   time={time} />
-                {lastRead === message.id ? 
+                {lastRead === message.id && 
                   <ReadAvatar
                     sidebar={false}
                     username={otherUser.username}
                     photoUrl={otherUser.photoUrl} /> 
-                  : null }
+                }
               </Box>
             );
           } else {
