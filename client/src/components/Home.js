@@ -59,7 +59,6 @@ const Home = ({ user, logout }) => {
         message: data.message,
         recipientId: body.recipientId,
         sender: data.sender,
-        participants: body.participants,
       });
   };
 
