@@ -1,25 +1,30 @@
 const { Op } = require("sequelize");
 const db = require("../db");
-const Message = require("./message");
+const User = require("./user");
 
-const Conversation = db.define("conversation", {});
+const Conversation = db.define("conversation", {
+});
 
-// find conversation given two user Ids
+// find conversation given a list of user IDs
 
-Conversation.findConversation = async function (user1Id, user2Id) {
-  const conversation = await Conversation.findOne({
+Conversation.findConversation = async function (userIds) {
+  const conversations = await Conversation.findAll({
+    attributes: ["id"],
     where: {
-      user1Id: {
-        [Op.or]: [user1Id, user2Id]
-      },
-      user2Id: {
-        [Op.or]: [user1Id, user2Id]
+      '$users.id$': {
+        [Op.in]: userIds
       }
-    }
+    },
+    include: [
+      {model: User, as: User.tableName}
+    ]
   });
 
+  const filtered = conversations.filter(conversation => 
+    conversation.users.length === userIds.length)
+  
   // return conversation or null if it doesn't exist
-  return conversation;
+  filtered.length ? res.json({filtered}) : null;
 };
 
 module.exports = Conversation;
